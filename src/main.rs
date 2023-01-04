@@ -1,20 +1,10 @@
-use crossterm::{terminal, Result};
-
+use crossterm::Result;
+mod screen; 
+mod keyboard; 
 mod editor;
-use editor::Editor;
+use editor::*;
 
 fn main() -> Result<()> {
-    terminal::enable_raw_mode()?;
     let mut editor = Editor::new()?;
-
-    loop {
-        if editor.refresh_screen().is_err() {
-            editor.die("couldn't refresh screen!");
-        }
-        if editor.process_keypress() {
-            break;
-        }
-    }
-    let _ = terminal::disable_raw_mode();
-    Ok(())
+    editor.start()
 }
