@@ -1,32 +1,25 @@
+use crossterm::{event::Event, terminal, Result};
 
-use std::io::{stdout, Write};
-use crossterm::{
-    ExecutableCommand, QueueableCommand,
-    terminal, cursor, style::{self, Stylize}, Result
-};
+mod keyboard;
+use keyboard::*;
+mod input;
+use input::*;
+mod output;
+use output::*;
 
 fn main() -> Result<()> {
-
+    // println!("{:?}", terminal::is_raw_mode_enabled());
+    terminal::enable_raw_mode()?;
     loop {
-        
-    }
-}
-
-fn crossterm_exmaple() -> Result<()> {
-    let mut stdout = stdout();
-
-    stdout.execute(terminal::Clear(terminal::ClearType::All))?;
-  
-    for y in 0..40 {
-      for x in 0..150 {
-        if (y == 0 || y == 40 - 1) || (x == 0 || x == 150 - 1) {
-          // in this loop we are more efficient by not flushing the buffer.
-          stdout
-            .queue(cursor::MoveTo(x,y))?
-            .queue(style::PrintStyledContent( "█".magenta()))?;
+        if editor_refresh_screen().is_err() {
+            die("couldn't refresh screen!");
         }
-      }
+        if editor_process_keypress() {
+            break;
+        }
     }
-    stdout.flush()?;
+    let _ = terminal::disable_raw_mode();
     Ok(())
 }
+
+ 

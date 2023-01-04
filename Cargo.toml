@@ -8,3 +8,4 @@ author = "Ryan M"
 
 [dependencies]
 crossterm = "0.25.0"
+errno = "0.2.8"
